@@ -41,11 +41,22 @@ window.downloadFile = function (sUrl) {
 
 window.downloadFile.isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
 window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1;
+
+//Send video link to background
+function sendLink() {
+  chrome.runtime.sendMessage(vids.item(0).src);
+  console.log('link sent');
+  console.log(vids.item(0).src);
+}
+
+//Get video link
 var vids = document.getElementsByTagName('video');
 
+//Event Listener
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse) {
     console.log(message);
-    downloadFile(vids[0].src);
+  //  downloadFile(vids[0].src);
+  sendLink();
 }
