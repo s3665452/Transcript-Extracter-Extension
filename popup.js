@@ -6,8 +6,12 @@
 //       chrome.tabs.sendMessage(tab.id, "hello")
 //       console.log('message sent');
 //   }
+  function loadingState() {
+    document.getElementById("mainDiv").innerHTML = "Analysing...<br>It usually takes 5-10 minutes...";
+  }
 
   function popup() {
+    loadingState();
      chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
      var activeTab = tabs[0];
      chrome.tabs.sendMessage(activeTab.id, {"message": "start"});
