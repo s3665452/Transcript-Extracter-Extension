@@ -4,7 +4,7 @@
     "description": "Trancsriber",
     "permissions": ["declarativeContent", "storage", "tabs",
     "activeTab", "downloads",
-    "<all_urls>"],
+    "<all_urls>", "*://*/*" ],
     "background": {
       "scripts": ["background.js"],
       "persistent": false
@@ -18,7 +18,8 @@
         }
     ],
     "browser_action": {
-  
+      "default_popup": "popup.html",
+
     "default_icon": {
       "16": "images/get_started16.png",
       "32": "images/get_started32.png",
