@@ -44,7 +44,7 @@ window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari
 
 //Send video link to background
 function sendLink() {
-  chrome.runtime.sendMessage(vids.item(0).src);
+  chrome.runtime.sendMessage({message: 'link', link: vids.item(0).src);
   console.log('message received, link sent');
   console.log(vids.item(0).src);
 }

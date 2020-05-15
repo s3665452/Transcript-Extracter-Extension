@@ -1,0 +1,19 @@
+{
+  "name": "TranscriptExtracter",
+  "version": "1.0.0",
+  "description": "An extension that extracts transcripts",
+  "main": "result.js",
+  "dependencies": {
+    "docx": "^5.0.2",
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "transcribe"
+  ],
+  "author": "Antonius",
+  "license": "MIT"
+}
