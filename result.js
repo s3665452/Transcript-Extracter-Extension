@@ -2,14 +2,25 @@
 // dv.id = 'myid';
 // dv.innerHTML = 'test';
 // document.body.appendChild(dv);
-//const docx = require("docx");
-//const fs = require('browserify-fs');
+const docx = require("docx");
+const AWS = require("aws-sdk");
+//const fs = require('fs');
 //import * as fs from "fs";
 //import { Document, Packer, Paragraph, TextRun } from "docx";
 var transcript = "result transcript";
 var summary = "result summary";
 var summaryArray = new Array();
 var opar = "sample";
+
+/**
+  * Change the region and endpoint.
+  */
+  AWS.config.update({region:'us-east-1',
+  accessKeyId: 'ASIA4CWIRGO4AYR4TNLE',
+    secretAccessKey: '7eOQq8FwGMxPTlnuEpjycciabKR5adVcVeLoYkq2',
+    sessionToken: 'FwoGZXIvYXdzEGMaDECHBMgMnfAwI1Ls/yLLATb/2e0T27sShiKiQbnwx/d0W/GYo12/mPh4ycuPJu23bzCcVfwKnAVqdDtUnBsfZFlGzwIDls8LiE1n6OqqmgPAzSSSnDgdv9+aP7ROVzOItJsYUjD0rLHdGSgD6F+vEx0HxpgqZig8y0Y/cA3Ws/T6Jn5J05Hj5NjJaYeuLxQJ2LXWEEOHqL4ng+MwJ9g4N3LKzwWzaV6+0xPtf+rCSL7X8d0C4BM7QpDmAOnTXx7C1fMgMDZLPRgpSgzvFmlHmld770S+8CrWzgiUKMKG/fUFMi1n2c8G7qIcqdHQ8mSS0/vh0UXIwUx0yx8cx8AKRS2qght6PNW5r+pWIaYABnw='});
+
+var translate = new AWS.Translate({region: AWS.config.region});
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -63,23 +74,87 @@ doc.addSection({
     children: [
         new docx.Paragraph({
             children: [
-                new docx.TextRun("Hello World"),
                 new docx.TextRun({
-                    text: "Foo Bar",
+                    text: "Transcript:",
                     bold: true,
+                })
+              ]
                 }),
-                new docx.TextRun({
-                    text: "\tGithub is the best",
-                    bold: true,
-                }),
+
+                new docx.Paragraph({
+                    children: [
+                        new docx.TextRun({
+                            text: transcript,
+                          //  bold: true,
+                          font: "arial",
+                        }),
             ],
         }),
+
+        new docx.Paragraph({
+            children: [
+                new docx.TextRun({
+                    text: " ",
+                    bold: true,
+                })
+              ]
+                }),
+
+        new docx.Paragraph({
+            children: [
+                new docx.TextRun({
+                    text: "Summary:",
+                    bold: true,
+                })
+              ]
+                }),
+
+                new docx.Paragraph({
+                    children: [
+                        new docx.TextRun({
+                            text: summary,
+                          //  bold: true,
+                          font: "arial",
+                        }),
+                ],
+                }),
+
+
+
     ],
 });
 
-// document.getElementById("saveDocx").onclick = function() {
-//   saveDocx();
-// }
+function downloadFile(options) {
+    if(!options.url) {
+        var blob = new Blob([ options.content ], {type : "application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+        options.url = window.URL.createObjectURL(blob);
+    }
+    chrome.downloads.download({
+        url: options.url,
+        filename: "transcript.docx"
+    })
+}
+
+// Download file with custom content
+// downloadFile({
+//   filename: "foo.txt",
+//   content: "bar"
+// });
+
+// Used to export the file into a .docx file
+docx.Packer.toBuffer(doc).then((buffer) => {
+    downloadFile({
+      filename: "my\.docx",
+      content: buffer
+    });
+});
+}
+
+document.getElementById("saveDocx").onclick = function() {
+  saveDocx();
+}
+
+function translate
 
 chrome.runtime.onMessage.addListener(printData);
 

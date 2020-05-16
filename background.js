@@ -54,42 +54,12 @@ function printData(transcript, summary) {
       }
 )}
 
-function saveDocx() {
-  // Create document
-const doc = new docx.Document();
-// Documents contain sections, you can have multiple sections per document, go here to learn more about sections
-// This simple example will only contain one section
-doc.addSection({
-    properties: {},
-    children: [
-        new docx.Paragraph({
-            children: [
-                new docx.TextRun("Hello World"),
-                new docx.TextRun({
-                    text: "Foo Bar",
-                    bold: true,
-                }),
-                new docx.TextRun({
-                    text: "\tGithub is the best",
-                    bold: true,
-                }),
-            ],
-        }),
-    ],
-});
-
-// Used to export the file into a .docx file
-docx.Packer.toBuffer(doc).then((buffer) => {
-    fs.writeFileSync("My Document.docx", buffer);
-});
-}
-
 //Talk to api
 async function getData(message, sender, sendResponse) {
   console.log(message);
   if(message.message=='link'){
   console.log("getting data")
-  const api_url = 'https://1enk9j9ezl.execute-api.us-east-1.amazonaws.com/s1/transcript?link='+message;
+  const api_url = 'https://1enk9j9ezl.execute-api.us-east-1.amazonaws.com/s1/transcript?link='+message.link;
   const response = await fetch(api_url);
   const data = await response.json();
   //console.log(data);
