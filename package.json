@@ -4,6 +4,7 @@
   "description": "An extension that extracts transcripts",
   "main": "result.js",
   "dependencies": {
+    "aws-sdk": "^2.678.0",
     "docx": "^5.0.2",
     "fs": "0.0.1-security"
   },

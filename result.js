@@ -16,11 +16,9 @@ var opar = "sample";
   * Change the region and endpoint.
   */
   AWS.config.update({region:'us-east-1',
-  accessKeyId: 'ASIA4CWIRGO4AYR4TNLE',
-    secretAccessKey: '7eOQq8FwGMxPTlnuEpjycciabKR5adVcVeLoYkq2',
-    sessionToken: 'FwoGZXIvYXdzEGMaDECHBMgMnfAwI1Ls/yLLATb/2e0T27sShiKiQbnwx/d0W/GYo12/mPh4ycuPJu23bzCcVfwKnAVqdDtUnBsfZFlGzwIDls8LiE1n6OqqmgPAzSSSnDgdv9+aP7ROVzOItJsYUjD0rLHdGSgD6F+vEx0HxpgqZig8y0Y/cA3Ws/T6Jn5J05Hj5NjJaYeuLxQJ2LXWEEOHqL4ng+MwJ9g4N3LKzwWzaV6+0xPtf+rCSL7X8d0C4BM7QpDmAOnTXx7C1fMgMDZLPRgpSgzvFmlHmld770S+8CrWzgiUKMKG/fUFMi1n2c8G7qIcqdHQ8mSS0/vh0UXIwUx0yx8cx8AKRS2qght6PNW5r+pWIaYABnw='});
-
-var translate = new AWS.Translate({region: AWS.config.region});
+  accessKeyId: 'ASIA4CWIRGO4FN66MMNL',
+    secretAccessKey: 'DJQNw/fPYgXmfXKi9KZcyOC6x87lt5h4g59vI8Fs',
+    sessionToken: 'FwoGZXIvYXdzEHkaDMaMG0Y836bMvBEHOiLLAf8rtdqVNbtyq8ahVMj/9R+xC7pt3jWt8d1DqXMUtH1AF1QHMKvUKDSCw2YiIozolzR3gw9VzNFE/bsKwjKKzGWPPUXUOXYeUCq3JoJ4Vs6RbLRX+ZiD5zv+I79h3FSrKWWfTYC4jZdD9IkrOpXdPE480WlGHFqMY+HCnmltPc23/uOE90rHxU4wE2NTgoZIiKPqTAzE5Ba+eTRIJhIRo/OBUrcSulDqokSBjDda6miWaGl/995udsIHyvGUtuyb471ECkPlXxi4rwsTKP7jgfYFMi28Kf1WBTnlyMKcRja4cMhL7sMU8WzRA9xGrP97VUQzcCbzgvrpGrFy4/uE6s4='});
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -154,7 +152,86 @@ document.getElementById("saveDocx").onclick = function() {
   saveDocx();
 }
 
-function translate
+function tokenizeText(text, limit) {
+
+    var waitingArray = new Array();
+    textArray = text.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
+    while(textArray.join(" ").length>=limit) {
+    //  console.log(transcriptArray.join("").length);
+
+      var part = textArray[0];
+      var i = 1;
+      while(part.length + textArray[i].length < limit) {
+        part = part + " " + textArray[i];
+        i += 1;
+      }
+      waitingArray.push(part);
+      textArray = textArray.slice(i);
+    }
+    //console.log(transcriptArray.join("")+"last");
+    waitingArray.push(textArray.join(" "));
+
+    return waitingArray;
+
+}
+
+async function translate(text, language, targetId) {
+
+  console.log("Start");
+
+var translatedText = "";
+var waitingArray = await tokenizeText(text, 5000);
+var resultArray = await new Array(waitingArray.length);
+
+console.log(waitingArray.join("|"));
+
+  var translate = new AWS.Translate({region: AWS.config.region});
+
+  if (!text) {
+          alert("Input text cannot be empty.");
+          exit();
+      }
+
+      waitingArray.forEach(doTranslate);
+
+async function doTranslate(item, index) {
+
+  //  await sleep(300*index);
+
+    var params = {
+      Text: item,
+      SourceLanguageCode: "auto",
+      TargetLanguageCode: language
+    };
+
+  translate.translateText(params, function(err, data) {
+            if (err) {
+                console.log(err, err.stack);
+                alert("Error calling Amazon Translate. " + err.message);
+                return;
+            }
+            if (data) {
+              console.log(data);
+            //  translatedText = translatedText + data.TranslatedText;
+            resultArray[index] = data.TranslatedText;
+            console.log(resultArray.join(" "));
+            document.getElementById(targetId).innerHTML = resultArray.join(" ");
+            }
+        });
+
+  }
+
+  // while(i<waitingArray.length) {
+//  await sleep(6000);
+// }
+
+}
+
+var languageDropdown = document.getElementById("languages");
+document.getElementById("change").addEventListener("click", function(){
+//  console.log("clicked")
+  translate(transcript, languageDropdown.options[languageDropdown.selectedIndex].value, "translatedTranscript");
+});
 
 chrome.runtime.onMessage.addListener(printData);
 
