@@ -1,76 +1,39 @@
 console.log('background running');
 
-//chrome.browserAction.onClicked.addListener(buttonClicked);
+//variables
 var transcripts = "bg transcript";
 var summary = "bg summary";
-
-//function buttonClicked(tab){
-    // chrome.tabs.sendMessage(tab.id, "hello")
-    // console.log('message sent');
-  //  chrome.windows.create({
-//url: chrome.runtime.getURL("popup.html"),
-        // width:  430,
-        // height: 430,
-      //  type: "popup"
-//    }, function(win) {
-    //    chrome.windows.update(tab.windowId, { focused: true });
-//    });
-//}
-
-// function sendData(transcript, summary) {
-// chrome.runtime.sendMessage({
-//     message: "data",
-//     transcript: transcript,
-//     summary: summary
-// });
-// }
-
+//open result.html in a new tab to print transcript and summary
 function printData(transcript, summary) {
-    console.log("tab opening 1");
-  // chrome.tabs.create({
-  //   active: true,
-  //   url: chrome.runtime.getURL("result.html"),
-  // }, function(win) {
-  //   win.body = "result is here2";
-  //   document.innerHTML = "result is here1";
-  //   document.body = "result is here 3";
-  // console.log("window opened");
-  // });
-  chrome.tabs.create(
-    {active: true,
-      url: //"https:www.google.com/"
-    chrome.runtime.getURL("result.html")
-    }, (tab) =>
-    {
-        setTimeout(
-          () => {
-            //use your message data here.
-            chrome.tabs.sendMessage(tab.id, {
-                 message: "print",
-                 transcript: transcript,
-                 summary: summary
-             })
-        }, 3000);
-      }
-)}
-
-//Talk to api
+  console.log("tab opening 1");
+//open result.html in a new tab
+  chrome.tabs.create({
+    active: true,
+    url: chrome.runtime.getURL("result.html")
+  }, (tab) => {
+    //wait 3 seconds for the tab to load
+    setTimeout(
+      () => {
+        //send message to the tab
+        chrome.tabs.sendMessage(tab.id, {
+          message: "print",
+          transcript: transcript,
+          summary: summary,
+        })
+      }, 3000);
+  })
+}
+//Send link to the API, get transcript and summary
 async function getData(message, sender, sendResponse) {
   console.log(message);
-  if(message.message=='link'){
-  console.log("getting data")
-  const api_url = 'https://1enk9j9ezl.execute-api.us-east-1.amazonaws.com/s1/transcript?link='+message.link;
-  const response = await fetch(api_url);
-  const data = await response.json();
-  //console.log(data);
-  console.log(data.transcript);
-  console.log(data.summary);
-//  sendData(data.transcript, data.summary)
-printData(data.transcript, data.summary);
-}
-else if(message.message=='download'){
-  saveDocx();
-}
-}
-
+  if (message.message == 'link') {
+    console.log("getting data")
+    const api_url = 'https://1enk9j9ezl.execute-api.us-east-1.amazonaws.com/s1/transcript?link=' + message.link;
+    const response = await fetch(api_url);
+    const data = await response.json();
+    //call printData() with transcript and summary returned
+    printData(data.transcript, data.summary);
+  }
+  }
+//call getData() when message received
 chrome.runtime.onMessage.addListener(getData);

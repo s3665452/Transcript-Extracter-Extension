@@ -1,35 +1,22 @@
-// let Download = document.getElementById('download');
-//
-//
-//
-// Download.onclick = function (tab){
-//       chrome.tabs.sendMessage(tab.id, "hello")
-//       console.log('message sent');
-//   }
-  function loadingState() {
-    document.getElementById("mainDiv").innerHTML = "Analysing...<br>It usually takes 5-10 minutes...";
-  }
-
-  function popup() {
-    loadingState();
-     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-     var activeTab = tabs[0];
-     chrome.tabs.sendMessage(activeTab.id, {"message": "start"});
-     console.log("message sent to content")
+//tell users the extension is working
+function loadingState() {
+  document.getElementById("mainDiv").innerHTML = "Analysing...<br>It usually takes 5-10 minutes...";
+}
+//send message to content.js to start
+function popup() {
+  loadingState();
+  chrome.tabs.query({
+    currentWindow: true,
+    active: true
+  }, function(tabs) {
+    var activeTab = tabs[0];
+    chrome.tabs.sendMessage(activeTab.id, {
+      "message": "start"
     });
- }
-
- document.addEventListener("DOMContentLoaded", function() {
-   document.getElementById("download").addEventListener("click", popup);
- });
-
-//https://stackoverflow.com/questions/12265403/passing-message-from-background-js-to-popup-js
- chrome.runtime.onMessage.addListener(
-     function(data, sender, sendResponse) {
-         if (data.msg === "data") {
-             //  To do something
-             console.log(data.transcript);
-             console.log(request.summary);
-         }
-     }
- );
+    console.log("message sent to content")
+  });
+}
+//link pupup() to the button
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("download").addEventListener("click", popup);
+});
