@@ -20,3 +20,9 @@ function popup() {
 document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("download").addEventListener("click", popup);
 });
+
+/*
+[1]"Getting Started Tutorial - Google Chrome", Developer.chrome.com, 2020. [Online]. Available: https://developer.chrome.com/extensions/getstarted. [Accessed: 24- May- 2020].
+[2]"Develop Extensions - Google Chrome", Developer.chrome.com, 2020. [Online]. Available: https://developer.chrome.com/extensions/devguide. [Accessed: 24- May- 2020].
+[3]The Coding Train, "Session 11: Chrome Extensions - Programming with Text - YouTube", YouTube, 2020. [Online]. Available: https://www.youtube.com/playlist?list=PLRqwX-V7Uu6bL9VOMT65ahNEri9uqLWfS. [Accessed: 24- May- 2020].
+*/

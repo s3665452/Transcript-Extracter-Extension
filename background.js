@@ -1,5 +1,4 @@
 console.log('background running');
-
 //variables
 var transcripts = "bg transcript";
 var summary = "bg summary";
@@ -7,6 +6,7 @@ var summary = "bg summary";
 function printData(transcript, summary) {
   console.log("tab opening 1");
 //open result.html in a new tab
+//[4]D. Raja, "Simple chrome extension opening new tab and showing data from page", Stack Overflow, 2020. [Online]. Available: https://stackoverflow.com/questions/48189130/simple-chrome-extension-opening-new-tab-and-showing-data-from-page. [Accessed: 24- May- 2020].
   chrome.tabs.create({
     active: true,
     url: chrome.runtime.getURL("result.html")
